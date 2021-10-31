@@ -12,7 +12,7 @@ class MyClass
 public:
     static int totalCount;
     int thisObjNum;
-    unsigned long long int loopCounter = 0;
+    unsigned long long int loopCounter = 0ULL;
 
     MyClass()
     {
@@ -21,12 +21,29 @@ public:
     
     void foo()
     {
+        bool fast = true;
+        unsigned int sleep_ms; 
+        unsigned long long int countModulo;
+
+        if (fast)
+        {
+            sleep_ms = 0; //zero for max CPU usage
+            countModulo = 100000000ULL;
+        }
+        else
+        {
+            sleep_ms = 1; // 1ms ootherwise, consumes less CPU
+            countModulo = 100ULL;
+        }
+
         g_mtx.lock();
         cout << "Starting foo # " << thisObjNum << endl;
         g_mtx.unlock();
         while (g_stopFlag != true)
         {
-            if (++loopCounter % 100000000ULL == 0ULL)
+            if (sleep_ms != 0) Sleep(sleep_ms); //Avoiding Sleep() overhead
+
+            if (++loopCounter % countModulo == 0ULL)
             {
                 g_mtx.lock();
                 cout << "foo #" << thisObjNum << " count = " << loopCounter << endl;
@@ -48,7 +65,7 @@ void printStopMessage(void)
 }
 void detectStopSignal(bool *stopFlag)
 {
-    while (getchar() != '\n') Sleep(1000);
+    while (getchar() != '\n') Sleep(100);
     *stopFlag = true;
 }
 
