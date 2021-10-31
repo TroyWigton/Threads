@@ -24,6 +24,7 @@
     <ProjectGuid>{91ee0e78-4b14-4b7d-8a12-a1f919801a1c}</ProjectGuid>
     <RootNamespace>MultiThreadExample</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>CPU Consumer</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
