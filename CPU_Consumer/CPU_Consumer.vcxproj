@@ -21,10 +21,10 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{91ee0e78-4b14-4b7d-8a12-a1f919801a1c}</ProjectGuid>
-    <RootNamespace>MultiThreadExample</RootNamespace>
+    <RootNamespace>CPU_Consumer</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
     <ProjectName>CPU Consumer</ProjectName>
+    <ProjectGuid>{9171A8D0-48FB-447B-85D1-7F69C6559636}</ProjectGuid>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
