@@ -18,7 +18,7 @@ public:
     {
         thisObjNum = ++totalCount;
     }
-
+    
     void foo()
     {
         g_mtx.lock();
