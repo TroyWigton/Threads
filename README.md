@@ -1,4 +1,4 @@
 # Threads
 An Exploration of Concurrency.
-## CPU Consumer
+## CPU_Consumer
 Launch many (9) threads which each count unregulated and print progress.
