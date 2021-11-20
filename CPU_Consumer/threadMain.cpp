@@ -1,54 +1,35 @@
 #include <iostream>
 #include <thread>
 #include <mutex>
-#include <windows.h>
+#include <chrono>
+//#include <windows.h>
+
 
 using namespace std;
-mutex g_mtx;   // Is this an appropriate place to define a mutex?  Is my usage below appropriate?
+mutex g_mtx;
 bool g_stopFlag = false;
 
 void foo(unsigned int msDelay)
 {
-    bool fast = false;
-    unsigned int sleep_ms;
-    unsigned long long int countModulo;
     static unsigned int thisCallNumberStatic = 0;
-    unsigned int thisCallNumberAuto;
+    unsigned int thisCallNumber;
     unsigned long long int loopCounter = 0ULL;
-
-    Sleep(msDelay);
 
     // Try to prove that calls to stand alone foo retain their own local data within each thread.
     g_mtx.lock();
     cout << "Foo Call Number: " << ++thisCallNumberStatic << endl;
-    thisCallNumberAuto = thisCallNumberStatic;
+    thisCallNumber = thisCallNumberStatic;
     g_mtx.unlock();
 
-    if (fast)
-    {
-        sleep_ms = 0; //zero for max CPU usage
-        countModulo = 100000000ULL;
-    }
-    else
-    {
-        sleep_ms = 1; // 1ms ootherwise, consumes less CPU
-        countModulo = 100ULL;
-    }
-
-   
     while (g_stopFlag != true)
     {
-        if (sleep_ms != 0) Sleep(sleep_ms); //Avoiding Sleep() overhead
-
-        if (++loopCounter % countModulo == 0ULL)
-        {
+            this_thread::sleep_for(chrono::milliseconds(msDelay));
             g_mtx.lock();
-            cout << "Foo #"<<thisCallNumberAuto<<": Loop Count = " << loopCounter << endl;
+            cout << "Foo #"<<thisCallNumber<<": Loop Count = " << ++loopCounter << endl;
             g_mtx.unlock();
-        }
     }
     g_mtx.lock();
-    cout <<"Foo # "<<thisCallNumberAuto<<" stopFlag detected" << endl;
+    cout <<"Foo # "<<thisCallNumber<<" stopFlag detected" << endl;
     g_mtx.unlock();
 }
 
@@ -58,18 +39,18 @@ void printStopMessage(void)
 }
 void detectStopSignal(bool *stopFlag)
 {
-    while (getchar() != '\n') Sleep(100);
+    while (getchar() != '\n') this_thread::sleep_for(chrono::milliseconds(200));
     *stopFlag = true;
 }
 
-void startupMessage(unsigned int seconds)
+void startupMessage()
 {
     printStopMessage();
     cout << "Spawing threads in";
-    for (int countdown = seconds; countdown > 0; --countdown)
+    for (int countdown = 3; countdown > 0; --countdown)
     {
         cout << " " << countdown;
-        Sleep(1000);
+        this_thread::sleep_for(1000ms);
     };
     cout << " Go!"<<endl<<endl;
 }
@@ -77,11 +58,11 @@ void startupMessage(unsigned int seconds)
 int main(void)
 {
     thread stopTriggerDetector(detectStopSignal,&g_stopFlag);
-    startupMessage(3);
+    startupMessage();
 
-    thread t1(foo,0);
-    thread t2(foo,2000);
-    thread t3(foo,4000);
+    thread t1(foo,1000);
+    thread t2(foo,1000);
+    thread t3(foo,1000);
 
     stopTriggerDetector.join();
     t1.join(); 
